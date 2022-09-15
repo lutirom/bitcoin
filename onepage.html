@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bitcoin counter</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <style type="text/css">
+    h1,
+    p {
+      color: white;
+    }
+
+    input {
+      transition: .5s;
+    }
+
+    input.input-count {
+      width: 100%;
+    }
+
+    input.invalid {
+      border: 2px solid red;
+    }
+
+    .navbar {
+      background: rgb(1,255,255);
+      background: linear-gradient(90deg, rgba(1,255,255,1) 0%, rgba(0,49,145,1) 64%, rgba(0,0,64,1) 100%);
+    }
+
+    .bitcoin-head,
+    .count-head{
+      width: 100vw;
+      height: calc(100vh - 56px);
+      display: flex;
+      background-image: url("https://www.blockchainmagazine.net/wp-content/uploads/2021/05/SL-0212121-40670-68-scaled.jpg");
+    }
+
+    .head-text {
+      position: relative;
+      top: 30%;
+    }
+
+    /** MODAL **/
+
+    .modal.show .modal-dialog {
+      transform: translateY(50%);
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="index.html">Bitcoin</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="index.html">Головна</a>
+        <a class="nav-link" href="count.html">Рахувати</a>
+      </div>
+    </div>
+  </div>
+</nav>
+<div class="bitcoin-head">
+  <div class="container-xl">
+    <div class="row head-text">
+      <div class="col-12">
+        <h1 class="text-md-start text-center">Привіт! Ця сторінка створена спеціально для рахування
+          біткоінів</h1>
+        <p class="text-md-start text-center">Тисни кнопочку для того щоб спробувати</p>
+        <button type="button" class="btn btn-light col-12 col-md-2" data-bs-toggle="modal"
+                data-bs-target="#bitcoin-counter">Рахувати
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="bitcoin-counter" tabindex="-1" role="dialog" aria-labelledby="bitcoin-counter"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Калькулятор Біткоіна</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="count-form">
+          <div class="bitcoin-price-wrapper">
+            <label for="bitcoin-price" class="d-block">Поточна вартість Біткоіна:</label>
+            <input type="number" id="bitcoin-price" placeholder="21000">
+          </div>
+          <div class="available-money-wrapper">
+            <label for="available-money" class="d-block">На яку сумму ви хотіли б купити біткоінів?</label>
+            <input type="number" id="available-money" placeholder="1000">
+          </div>
+          <div class="count-text"><h5 class="d-inline-block pe-2">Ви можете купити:</h5><span
+                  class="bitcoin-amount"></span></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary clear">Очистити</button>
+        <button type="button" class="btn btn-primary count">Порахувати</button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+<script>
+  const getBitcoin = function (bitcoinPrice, availableMoney) {
+    return availableMoney / bitcoinPrice
+  }
+
+  const COUNTBTN = document.querySelector('.count');
+  const CLRBTN = document.querySelector('.clear');
+  const MONEYINPUT = document.querySelector('#available-money')
+  const PRICEINPUT = document.querySelector('#bitcoin-price')
+  const BITCOINAMOUNTELEMENT = document.querySelector('.bitcoin-amount');
+
+  COUNTBTN.onclick = function () {
+    const MONEY = Number(MONEYINPUT.value);
+    const PRICE = Number(PRICEINPUT.value);
+
+    console.log(MONEY);
+
+    if (MONEY === 0 && PRICE === 0) {
+      BITCOINAMOUNTELEMENT.innerHTML = 'Веедіть вартість та суму відмінну від нуля'
+      MONEYINPUT.classList.add('invalid');
+      PRICEINPUT.classList.add('invalid');
+    } else if (MONEY === 0) {
+      BITCOINAMOUNTELEMENT.innerHTML = 'Веедіть суму відмінну від нуля'
+      MONEYINPUT.classList.add('invalid');
+      PRICEINPUT.classList.remove('invalid');
+    } else if (PRICE === 0) {
+      BITCOINAMOUNTELEMENT.innerHTML = 'Веедіть вартість відмінну від нуля'
+      PRICEINPUT.classList.add('invalid');
+      MONEYINPUT.classList.remove('invalid');
+    } else {
+      if (MONEYINPUT.classList.contains('invalid')) {
+        MONEYINPUT.classList.remove('invalid');
+      }
+
+      if (PRICEINPUT.classList.contains('invalid')) {
+        PRICEINPUT.classList.remove('invalid');
+      }
+
+      let bitcoinString = getBitcoin(PRICE, MONEY).toString()
+      bitcoinString = bitcoinString.slice(0, (bitcoinString.indexOf(".")) + 8)
+
+      BITCOINAMOUNTELEMENT.innerHTML =  Number(bitcoinString) + 'BTC';
+    }
+  }
+
+
+  CLRBTN.onclick = function () {
+
+    if (MONEYINPUT.classList.contains('invalid')) {
+      MONEYINPUT.classList.remove('invalid');
+    }
+
+    if (PRICEINPUT.classList.contains('invalid')) {
+      PRICEINPUT.classList.remove('invalid');
+    }
+
+    MONEYINPUT.value = '';
+    PRICEINPUT.value = '';
+
+    BITCOINAMOUNTELEMENT.innerHTML = '';
+  }
+</script>
+</html>
